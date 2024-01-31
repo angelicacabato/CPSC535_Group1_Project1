@@ -122,7 +122,6 @@ def bucket_sort(arr):
     # Sort buckets with insertion sort
     for i in range(len(arr)):
         temp_arr[i] = insertion_sort(temp_arr[i])
-        print(temp_arr[i])
 
     # concatenate each element from each bucket in order
     idx = 0
@@ -138,8 +137,7 @@ def main():
     try:
         # arr = list(map(int, input("Enter numbers separated by
         # spaces:").split()))
-        arr = [42, 32, 33, 52, 37, 47, 51]
-        # arr = [.42, .32, .33, .52, .37, .47, .51]
+        arr = [4, 19, 35, 64, 22, 0, 57, 82]
         # print("Sorted Array using Counting Sort: ", counting_sort(arr))
         # print("Sorted Array using Quick Sort: ", quick_sort(arr, 0, len(arr) - 1))
         print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
