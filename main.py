@@ -12,6 +12,7 @@ and Medians & Order Statistics.
 
 """
 
+
 # TODO: Heapsort
 
 # Quicksort
@@ -36,62 +37,86 @@ def quick_sort(arr, low, high):
         quick_sort(arr, pi + 1, high)  # sorting everything to the right of the
         # pivot
 
+
 # TODO: Counting Sort
 
-def counting_sort(arr):
+# Counting sort in Python programming
 
+
+def countingSort(array):
+    size = len(array)
+    output = [0] * size
+
+    # Initialize count array
+    count = [0] * 10
+
+    # Store the count of each elements in count array
+    for i in range(0, size):
+        count[array[i]] += 1
+
+    # Store the cummulative count
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+
+    # Find the index of each element of the original array in count array
+    # place the elements in output array
+    i = size - 1
+    while i >= 0:
+        output[count[array[i]] - 1] = array[i]
+        count[array[i]] -= 1
+        i -= 1
+
+    # Copy the sorted elements into original array
+    for i in range(0, size):
+        array[i] = output[i]
+
+    return array
+
+
+def counting_sort(arr):
     # find max value
     max_val = max(arr)
-    print(max_val)
 
     temp_size = max_val + 1
 
-    #initalize a temp arr to the size of the input arr + 1
+    # initalize a temp arr to the size of the input arr + 1
     temp_arr = [0] * (temp_size)
-    sorted_arr = [0] * (temp_size)
     print(temp_arr)
-    print(sorted_arr)
 
     # Set temp[i] to equal the number of elements equal to i
     for i in range(len(arr)):
-       temp_arr[arr[i]] += 1
-
-    print("break")
+        temp_arr[arr[i]] = (temp_arr[arr[i]] + 1)
 
     # Set temp[i] to equal the number of elements less than or equal to i
     for i in range(1, temp_size):
-       temp_arr[i] = (temp_arr[i] + temp_arr[i-1])
-       print(temp_arr[i])
+        temp_arr[i] = (temp_arr[i] + temp_arr[i - 1])
+        print(temp_arr[i])
 
-    print("break")
+    # create sorted array and initialize to 0
+    sorted_arr = [0] * (len(arr))
 
-    # sort the list
-    for i in reversed(range(1, len(arr))):
-        print(temp_arr[arr[i]])
-        sorted_arr[temp_arr[arr[i]]] = arr[i]
+    # sort the list and transfer to sorted array
+    i = (len(arr) - 1)
+    while i >= 0:
+        sorted_arr[temp_arr[arr[i]] - 1] = arr[i]
         temp_arr[arr[i]] -= 1
+        i -= 1
 
-
-    # Copy to input arr
+    # Copy the sorted elements into original array
     for i in range(0, len(arr)):
-        arr[i] = sorted_arr[i] + 1
-        print(arr[i])
+        arr[i] = sorted_arr[i]
 
     return arr
-
 
 # TODO: Radix Sort
 
 # TODO: Bucket Sort
 
 def main():
-
     try:
         arr = list(map(int, input("Enter numbers separated by spaces: ").split()))
-
         print("Sorted Array using Counting Sort: ", counting_sort(arr))
-        #quick_sort(arr, 0, len(arr) - 1)
-        #print("Sorted Array using Quick Sort: ", arr)
+        # print("Sorted Array using Quick Sort: ", quick_sort(arr, 0, len(arr) - 1))
     except ValueError:
         print("Please enter only integers separated by spaces.")
 
