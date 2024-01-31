@@ -1,7 +1,11 @@
 """
-GROUP 1
+GROUP 1: Anunay Amrit, Angelica Cabato, Pranav Vijay Chand, Riya Chapatwala
+Riya Chapatwala, Sai Satya Jagannadh Doddipatla, Nhat Ho
+
 Algorithm Specialists: Angelica Cabato, Nhat Ho
+
 Dr. Shah
+
 CPSC 535: Advanced Algorithms (Spring 2024)
 
 
@@ -77,13 +81,68 @@ def counting_sort(arr):
 
 # TODO: Radix Sort
 
+
+# Insertion Sort - > helper for Bucket Sort
+
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and key < arr[j]:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+    return arr
+
 # TODO: Bucket Sort
+
+def bucket_sort(arr):
+    temp_arr = []
+
+    # create sorted array and initialize to 0
+    sorted_arr = [0] * (len(arr))
+
+    # find max value to determine bucket size
+    max_value = max(arr)
+    size = max_value / len(arr)
+
+    # create buckets
+    for i in range(len(arr)):
+        temp_arr.append([])
+
+    # insert elements into buckets
+    for i in range(len(arr)):
+        idx = int(arr[i] / size)
+        if idx != len(arr):
+            temp_arr[idx].append(arr[i])
+        else:
+            temp_arr[len(arr) - 1].append(arr[i])
+
+
+    # Sort buckets with insertion sort
+    for i in range(len(arr)):
+        temp_arr[i] = insertion_sort(temp_arr[i])
+        print(temp_arr[i])
+
+    # concatenate each element from each bucket in order
+    idx = 0
+    for i in range(len(arr)):
+        for j in range(len(temp_arr[i])):
+            temp = temp_arr[i][j]
+            sorted_arr[idx] = temp
+            idx += 1
+
+    return sorted_arr
 
 def main():
     try:
-        arr = list(map(int, input("Enter numbers separated by spaces: ").split()))
-        print("Sorted Array using Counting Sort: ", counting_sort(arr))
+        # arr = list(map(int, input("Enter numbers separated by
+        # spaces:").split()))
+        arr = [42, 32, 33, 52, 37, 47, 51]
+        # arr = [.42, .32, .33, .52, .37, .47, .51]
+        # print("Sorted Array using Counting Sort: ", counting_sort(arr))
         # print("Sorted Array using Quick Sort: ", quick_sort(arr, 0, len(arr) - 1))
+        print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
     except ValueError:
         print("Please enter only integers separated by spaces.")
 
