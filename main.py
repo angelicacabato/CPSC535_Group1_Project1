@@ -10,8 +10,10 @@ CPSC 535: Advanced Algorithms (Spring 2024)
 
 
 Task:
-- Implement the sorting algorithms: Heapsort, Quicksort, Linear Sorting,
-and Medians & Order Statistics.
+- Implement the sorting algorithms: Bubble Sort, Insertion Sort, Merge Sort,
+Heap Sort,
+Quick Sort,
+Counting Sort, Radix Sort, Bucket Sort, and Medians & Order Statistics.
 - Optimize and test the implemented algorithms for correctness.
 
 """
@@ -19,6 +21,52 @@ import multiprocessing
 import time
 import numpy as np
 import matplotlib.pyplot as plt
+
+################### Bubble Sort ########################
+# TODO: Bubble Sort
+
+######################################################
+
+################### Merge Sort ########################
+# TODO: Merge Sort
+def merge_sort(arr):
+    if len(arr) > 1:
+        # Finding the middle of the array
+        mid = len(arr) // 2
+
+        # Dividing the array into left and right sections
+        L = arr[:mid]
+        R = arr[mid:]
+
+        # Sorting each half of the array
+        merge_sort(L)
+        merge_sort(R)
+
+        i = j = k = 0
+
+        # Copying elements over
+        while i < len(L) and j < len(R):
+            if L[i] < R[j]:
+                arr[k] = L[i]
+                i += 1
+            else:
+                arr[k] = R[j]
+                j += 1
+            k += 1
+
+        # Checking for any elements remaining
+        while i < len(L):
+            arr[k] = L[i]
+            i += 1
+            k += 1
+
+        while j < len(R):
+            arr[k] = R[j]
+            j += 1
+            k += 1
+
+        return arr
+######################################################
 
 ################### Heap Sort ########################
 def build_max_heap(arr, n, i):
@@ -150,7 +198,7 @@ def radix_sort(arr):
     return arr
 ######################################################
 
-################### Bucket Sort ######################
+################### Insertion Sort ######################
 def insertion_sort(arr):
     for i in range(1, len(arr)):
         key = arr[i]
@@ -160,7 +208,9 @@ def insertion_sort(arr):
             j -= 1
         arr[j + 1] = key
     return arr
+######################################################
 
+################### Bucket Sort ######################
 def bucket_sort(arr):
     temp_arr = []
 
@@ -220,17 +270,20 @@ def main():
     try:
         # arr = list(map(int, input("Enter numbers separated by
         # spaces:").split()))
-        # arr = [4, 19, 35, 64, 22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123, 456]
+        arr = [4, 19, 35, 64, 22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123, 456]
         # print("Sorted Array using Counting Sort: ", counting_sort(arr))
         # print("Sorted Array using Quick Sort: ", quick_sort(arr))
         # print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
         # print("Sorted Array using Heap Sort: ", heap_sort(arr))
         # print("Sorted Array using Radix Sort: ", radix_sort(arr))
-        
+        # print("Sorted Array using Merge Sort: ", merge_sort(arr))
+
+
         np.random.seed(55)
         arr = list(np.random.randint(0, 1000, size=100000))
 
-        arr_algorithms = [bucket_sort, heap_sort, radix_sort, counting_sort, quick_sort]
+        arr_algorithms = [bucket_sort, heap_sort, radix_sort, counting_sort,
+                          quick_sort, merge_sort]
         exe_times = run_algorithm(arr_algorithms, arr)
 
         for algorithm, time_consume in zip(arr_algorithms, exe_times):
@@ -247,8 +300,10 @@ def main():
         plt.legend()
         plt.show()
 
+
     except ValueError:
         print("Please enter only integers separated by spaces.")
+        
 
 if __name__ == '__main__':
     main()
