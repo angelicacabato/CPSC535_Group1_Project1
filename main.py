@@ -1,6 +1,5 @@
 """
-GROUP 1: Anunay Amrit, Angelica Cabato, Pranav Vijay Chand, Riya Chapatwala
-Riya Chapatwala, Sai Satya Jagannadh Doddipatla, Nhat Ho
+GROUP 1: Anunay Amrit, Angelica Cabato, Pranav Vijay Chand, Riya Chapatwala, Sai Satya Jagannadh Doddipatla, Nhat Ho
 
 Algorithm Specialists: Angelica Cabato, Nhat Ho
 
@@ -11,9 +10,8 @@ CPSC 535: Advanced Algorithms (Spring 2024)
 
 Task:
 - Implement the sorting algorithms: Bubble Sort, Insertion Sort, Merge Sort,
-Heap Sort,
-Quick Sort,
-Counting Sort, Radix Sort, Bucket Sort, and Medians & Order Statistics.
+Heap Sort, Quick Sort, Counting Sort, Radix Sort, Bucket Sort, and Medians &
+Order Statistics (QuickSelect Method Algorithm)
 - Optimize and test the implemented algorithms for correctness.
 
 """
