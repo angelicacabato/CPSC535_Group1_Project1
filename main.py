@@ -60,13 +60,17 @@ def partition(arr, low, high):
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
     return i + 1
 
-def quick_sort(arr, low, high):
+def run_quick_sort(arr, low, high):
     if low < high:
         pi = partition(arr, low, high)
-        quick_sort(arr, low, pi - 1)  # sorting everything to the left of the
+        run_quick_sort(arr, low, pi - 1)  # sorting everything to the left of the
         # pivot
-        quick_sort(arr, pi + 1, high)  # sorting everything to the right of the
+        run_quick_sort(arr, pi + 1, high)  # sorting everything to the right of the
         # pivot
+
+def quick_sort(arr):
+    run_quick_sort(arr, 0, len(arr) - 1)
+    return arr
 ######################################################
 
 ################### Counting Sort ####################   
@@ -216,24 +220,24 @@ def main():
     try:
         # arr = list(map(int, input("Enter numbers separated by
         # spaces:").split()))
-        #arr = [4, 19, 35, 64, 22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123, 456]
+        # arr = [4, 19, 35, 64, 22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123, 456]
         # print("Sorted Array using Counting Sort: ", counting_sort(arr))
-        # print("Sorted Array using Quick Sort: ", quick_sort(arr, 0, len(arr) - 1))
-        #print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
-        #print("Sorted Array using Heap Sort: ", heap_sort(arr))
-        #print("Sorted Array using Radix Sort: ", radix_sort(arr))
+        # print("Sorted Array using Quick Sort: ", quick_sort(arr))
+        # print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
+        # print("Sorted Array using Heap Sort: ", heap_sort(arr))
+        # print("Sorted Array using Radix Sort: ", radix_sort(arr))
         
         np.random.seed(55)
         arr = list(np.random.randint(0, 1000, size=100000))
 
-        arr_algorithms = [bucket_sort, heap_sort, radix_sort, counting_sort]
+        arr_algorithms = [bucket_sort, heap_sort, radix_sort, counting_sort, quick_sort]
         exe_times = run_algorithm(arr_algorithms, arr)
 
         for algorithm, time_consume in zip(arr_algorithms, exe_times):
             print(f"{algorithm.__name__} Time: {time_consume:.6f} seconds")
 
         # Plot the results with colors
-        colors = ['blue', 'green', 'red', 'yellow']
+        colors = ['blue', 'green', 'red', 'yellow', 'orange']
 
         for i, (algorithm, time_consume) in enumerate(zip(arr_algorithms, exe_times)):
             plt.bar(algorithm.__name__, time_consume, color=colors[i], edgecolor='black', label=algorithm.__name__, hatch='/', alpha=0.7)
