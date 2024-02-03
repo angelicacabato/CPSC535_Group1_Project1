@@ -15,12 +15,40 @@ and Medians & Order Statistics.
 - Optimize and test the implemented algorithms for correctness.
 
 """
+import multiprocessing
+import time
+import numpy as np
+import matplotlib.pyplot as plt
 
+################### Heap Sort ########################
+def build_max_heap(arr, n, i):
+    root = i
+    left = 2*i + 1
+    right = 2*i + 2
 
-# TODO: Heapsort
+    if left < n and arr[left] > arr[root]:
+        root = left
+    
+    if right < n and arr[right] > arr[root]:
+        root = right
 
-# Quicksort
+    if root != i:
+        arr[i], arr[root] = arr[root], arr[i]
+        build_max_heap(arr, n, root)
 
+def heap_sort(arr):
+    arr_len = len(arr)
+    for i in range(arr_len // 2-1, -1, -1):
+        build_max_heap(arr, arr_len, i)
+
+    for i in range(arr_len-1, 0, -1):
+        arr[i], arr[0] = arr[0], arr[i]
+        build_max_heap(arr, i, 0)
+
+    return arr
+######################################################
+
+################### Quick Sort #######################
 def partition(arr, low, high):
     i = low - 1
     pivot = arr[high]
@@ -32,7 +60,6 @@ def partition(arr, low, high):
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
     return i + 1
 
-
 def quick_sort(arr, low, high):
     if low < high:
         pi = partition(arr, low, high)
@@ -40,10 +67,9 @@ def quick_sort(arr, low, high):
         # pivot
         quick_sort(arr, pi + 1, high)  # sorting everything to the right of the
         # pivot
+######################################################
 
-
-# TODO: Counting Sort
-
+################### Counting Sort ####################   
 def counting_sort(arr):
     # find max value
     max_val = max(arr)
@@ -52,7 +78,6 @@ def counting_sort(arr):
 
     # initalize a temp arr to the size of the input arr + 1
     temp_arr = [0] * (temp_size)
-    print(temp_arr)
 
     # Set temp[i] to equal the number of elements equal to i
     for i in range(len(arr)):
@@ -61,7 +86,6 @@ def counting_sort(arr):
     # Set temp[i] to equal the number of elements less than or equal to i
     for i in range(1, temp_size):
         temp_arr[i] = (temp_arr[i] + temp_arr[i - 1])
-        print(temp_arr[i])
 
     # create sorted array and initialize to 0
     sorted_arr = [0] * (len(arr))
@@ -78,12 +102,51 @@ def counting_sort(arr):
         arr[i] = sorted_arr[i]
 
     return arr
+######################################################
 
-# TODO: Radix Sort
+################### Radix Sort #######################
+def counting_sort_helps_radix(arr, exp):
+ 
+    arr_len = len(arr)
+    # declare the output array
+    output = [0] * (arr_len)
+    # initialize array having 0
+    count = [0] * (10)
+ 
+    # Store count of occurrences in count[]
+    for i in range(0, arr_len):
+        index = arr[i] // exp
+        modulo = index % 10
+        count[modulo] += 1
+ 
+    # Get actual position of current digit
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+ 
+    # Build the output array
+    i = arr_len - 1
+    while i >= 0:
+        index = arr[i] // exp
+        output[count[index % 10] - 1] = arr[i]
+        count[index % 10] -= 1
+        i -= 1
+ 
+    # Get the sorted array
+    i = 0
+    for i in range(0, len(arr)):
+        arr[i] = output[i]
+ 
+def radix_sort(arr):
+    # Find the maximum number
+    max_num = max(arr)
+    exp = 1
+    while max_num // exp >= 1:
+        counting_sort_helps_radix(arr, exp)
+        exp *= 10
+    return arr
+######################################################
 
-
-# Insertion Sort - > helper for Bucket Sort
-
+################### Bucket Sort ######################
 def insertion_sort(arr):
     for i in range(1, len(arr)):
         key = arr[i]
@@ -93,8 +156,6 @@ def insertion_sort(arr):
             j -= 1
         arr[j + 1] = key
     return arr
-
-# TODO: Bucket Sort
 
 def bucket_sort(arr):
     temp_arr = []
@@ -132,18 +193,58 @@ def bucket_sort(arr):
             idx += 1
 
     return sorted_arr
+######################################################
+
+def get_time(algo, arr):
+    start_time = time.time()
+    algo(arr)
+    end_time = time.time()
+    return end_time - start_time
+
+def run_algorithm(algoes, arr):
+    pool = multiprocessing.Pool(processes=len(algoes))
+    time_results = []
+
+    for algo in algoes:
+        result = pool.apply_async(get_time, (algo, arr.copy()))
+        time_results.append(result)
+
+    times = [float(result.get()) for result in time_results]
+    return times
 
 def main():
     try:
         # arr = list(map(int, input("Enter numbers separated by
         # spaces:").split()))
-        arr = [4, 19, 35, 64, 22, 0, 57, 82]
+        #arr = [4, 19, 35, 64, 22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123, 456]
         # print("Sorted Array using Counting Sort: ", counting_sort(arr))
         # print("Sorted Array using Quick Sort: ", quick_sort(arr, 0, len(arr) - 1))
-        print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
+        #print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
+        #print("Sorted Array using Heap Sort: ", heap_sort(arr))
+        #print("Sorted Array using Radix Sort: ", radix_sort(arr))
+        
+        np.random.seed(55)
+        arr = list(np.random.randint(0, 1000, size=100000))
+
+        arr_algorithms = [bucket_sort, heap_sort, radix_sort, counting_sort]
+        exe_times = run_algorithm(arr_algorithms, arr)
+
+        for algorithm, time_consume in zip(arr_algorithms, exe_times):
+            print(f"{algorithm.__name__} Time: {time_consume:.6f} seconds")
+
+        # Plot the results with colors
+        colors = ['blue', 'green', 'red', 'yellow']
+
+        for i, (algorithm, time_consume) in enumerate(zip(arr_algorithms, exe_times)):
+            plt.bar(algorithm.__name__, time_consume, color=colors[i], edgecolor='black', label=algorithm.__name__, hatch='/', alpha=0.7)
+        
+        plt.ylabel('Time (seconds)')
+        plt.title('Efficiency of Sorting Algorithms')
+        plt.legend()
+        plt.show()
+
     except ValueError:
         print("Please enter only integers separated by spaces.")
-
 
 if __name__ == '__main__':
     main()
