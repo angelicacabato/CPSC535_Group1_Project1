@@ -290,12 +290,26 @@ def bucket_sort(arr):
 ######################################################
 
 ################### QuickSelect Method Algorithm ########################
-# TODO: QuickSelect Method Algorithm
+def quick_select(arr, low, high, k):
+    # base case for recursion
+    if len(arr) == 1:
+        return arr[0]
 
+    if high - low <= k < 0:
+        print("Error: Index out of bound. Please try again.")
 
+    else:
+        # select pivot point
+        pivot = partition(arr, low, high - 1)
 
+        # return if pivot is equal to k, return pivot element
+        if pivot == k:
+            return arr[pivot]
 
-
+        if k < pivot:
+            return quick_select(arr, low, pivot - 1, k)
+        else:
+            return quick_select(arr, pivot + 1, high, k)
 ######################################################
 
 def get_time(algo, arr):
@@ -321,21 +335,29 @@ def main():
     try:
         # arr = list(map(int, input("Enter numbers separated by
         # spaces:").split()))
-        arr = [4, 19, 35, 64, 22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123, 456]
-        # print("Sorted Array using Counting Sort: ", counting_sort(arr))
-        # print("Sorted Array using Quick Sort: ", quick_sort(arr))
-        # print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
-        # print("Sorted Array using Heap Sort: ", heap_sort(arr))
-        # print("Sorted Array using Radix Sort: ", radix_sort(arr))
-        # print("Sorted Array using Merge Sort: ", merge_sort(arr))
+        arr = [4, 19, 35, 64, -22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123, 456]
+        #print("Sorted Array using Counting Sort: ", counting_sort(arr)) #
+        # check negative numbers
+        #print("Sorted Array using Quick Sort: ", quick_sort(arr))
+        #print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
+        #print("Sorted Array using Heap Sort: ", heap_sort(arr))
+        #print("Sorted Array using Radix Sort: ", radix_sort(arr)) #
+        # check negative numbers
+        #print("Sorted Array using Merge Sort: ", merge_sort(arr))
         print("Sorted Array using Bubble Sort: ", bubble_sort(arr))
 
+        # Running QuickSelect Algorithm
+        k = 8
 
+        print("The kth smallest element in the array is: ", quick_select(arr,
+                                                                         0,
+                                                                         len(
+                                                                             arr),k))
         np.random.seed(55)
         arr = list(np.random.randint(0, 1000, size=100000))
 
         arr_algorithms = [bucket_sort, heap_sort, radix_sort, counting_sort,
-                          quick_sort, merge_sort, bubble_sort]
+                          quick_sort, merge_sort, bubble_sort, quick_select]
         exe_times = run_algorithm(arr_algorithms, arr)
 
         for algorithm, time_consume in zip(arr_algorithms, exe_times):
@@ -354,7 +376,6 @@ def main():
         plt.title('Efficiency of Sorting Algorithms')
         plt.legend()
         plt.show()
-
 
     except ValueError:
         print("Please enter only integers separated by spaces.")
