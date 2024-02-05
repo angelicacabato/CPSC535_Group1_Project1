@@ -158,36 +158,36 @@ def quick_sort(arr):
 def counting_sort(arr):
     # find max value
     max_val = max(arr)
+    min_val = min(arr)
 
-    temp_size = max_val + 1
+    temp_size = (max_val - min_val) + 1
 
-    # initalize a temp arr to the size of the input arr + 1
+    # initalize a count_arr to the size of the input arr + 1
+    count_arr = [0] * (temp_size)
+
+    # Set count_arr[i] to equal the number of elements equal to i
+    for i in range(len(arr)):
+        count_arr[arr[i] - min_val] = (count_arr[arr[i] - min_val] + 1)
+
     temp_arr = [0] * (temp_size)
 
-    # Set temp[i] to equal the number of elements equal to i
-    for i in range(len(arr)):
-        temp_arr[arr[i]] = (temp_arr[arr[i]] + 1)
-
-    # Set temp[i] to equal the number of elements less than or equal to i
+    # Set temp_arr[i] to equal the number of elements less than or equal to i
     for i in range(1, temp_size):
-        temp_arr[i] = (temp_arr[i] + temp_arr[i - 1])
+        temp_arr[i] = (count_arr[i] + count_arr[i - 1])
 
-    # create sorted array and initialize to 0
-    sorted_arr = [0] * (len(arr))
+    # create sorted array
+    sorted_arr = []
 
-    # sort the list and transfer to sorted array
-    i = (len(arr) - 1)
-    while i >= 0:
-        sorted_arr[temp_arr[arr[i]] - 1] = arr[i]
-        temp_arr[arr[i]] -= 1
-        i -= 1
+    # iterate over count array
+    for i in range(min_val, max_val+1):
+        # check if value is in array
+        if count_arr[i - min_val] > 0:
+            # continue appending if element appears more than once
+            while count_arr[i - min_val] > 0:
+                sorted_arr.append(i)
+                count_arr[i - min_val] -= 1
 
-    # Copy the sorted elements into original array
-    for i in range(0, len(arr)):
-        arr[i] = sorted_arr[i]
-
-    return arr
-
+    return sorted_arr
 
 ######################################################
 
@@ -335,24 +335,27 @@ def main():
     try:
         # arr = list(map(int, input("Enter numbers separated by
         # spaces:").split()))
-        arr = [4, 19, 35, 64, -22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123, 456]
-        #print("Sorted Array using Counting Sort: ", counting_sort(arr)) #
-        # check negative numbers
+        arr = [-4, 19, 35, 64, -22, 0, 57, 82, 12, 55, 89, -34, 567,
+               78, 123, 456, -4, -22, 0, 89, 64]
+
+        print("Sorted Array [EXPECTED OUTPUT]", quick_sort(arr))
+        #print("Sorted Array using Counting Sort: ", counting_sort(arr))
         #print("Sorted Array using Quick Sort: ", quick_sort(arr))
-        #print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
+        print("Sorted Array using Bucket Sort: ", bucket_sort(arr)) # check
+        # lower range
         #print("Sorted Array using Heap Sort: ", heap_sort(arr))
-        #print("Sorted Array using Radix Sort: ", radix_sort(arr)) #
-        # check negative numbers
+        print("Sorted Array using Radix Sort: ", radix_sort(arr)) # check
+        # negative numbers
         #print("Sorted Array using Merge Sort: ", merge_sort(arr))
-        print("Sorted Array using Bubble Sort: ", bubble_sort(arr))
+        #print("Sorted Array using Bubble Sort: ", bubble_sort(arr))
 
         # Running QuickSelect Algorithm
         k = 8
 
-        print("The kth smallest element in the array is: ", quick_select(arr,
-                                                                         0,
-                                                                         len(
-                                                                             arr),k))
+        #print("The kth smallest element in the array is: ", quick_select(
+        # arr,0,len(arr),k))
+
+
         np.random.seed(55)
         arr = list(np.random.randint(0, 1000, size=100000))
 
@@ -364,7 +367,8 @@ def main():
             print(f"{algorithm.__name__} Time: {time_consume:.6f} seconds")
 
         # Plot the results with colors
-        colors = ['blue', 'green', 'red', 'yellow', 'orange']
+        colors = ['blue', 'green', 'red', 'yellow', 'orange', 'purple',
+                  'pink', 'brown']
 
         for i, (algorithm, time_consume) in enumerate(
                 zip(arr_algorithms, exe_times)):
