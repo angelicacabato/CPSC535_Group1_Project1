@@ -20,13 +20,37 @@ import time
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 ################### Bubble Sort ########################
-# TODO: Bubble Sort
+
+def bubble_sort(arr):
+    for i in range(len(arr)):
+
+        # keep track if elements have been swapped
+        swapped_elements = False
+
+        # shortens the length of the unsorted part of the array each loop
+        unsorted_arr = len(arr) - i - 1
+        for j in range(0, unsorted_arr):
+
+            # Compare neighboring elements, and swaps if needed
+            if arr[j] > arr[j + 1]:
+                temp = arr[j]
+                arr[j] = arr[j + 1]
+                arr[j + 1] = temp
+
+                swapped_elements = True
+
+        # Break is array is already sorted. Otherwise, continues comparing
+        if not swapped_elements:
+            break
+
+    return arr
+
 
 ######################################################
 
 ################### Merge Sort ########################
-# TODO: Merge Sort
 def merge_sort(arr):
     if len(arr) > 1:
         # Finding the middle of the array
@@ -64,17 +88,19 @@ def merge_sort(arr):
             k += 1
 
         return arr
+
+
 ######################################################
 
 ################### Heap Sort ########################
 def build_max_heap(arr, n, i):
     root = i
-    left = 2*i + 1
-    right = 2*i + 2
+    left = 2 * i + 1
+    right = 2 * i + 2
 
     if left < n and arr[left] > arr[root]:
         root = left
-    
+
     if right < n and arr[right] > arr[root]:
         root = right
 
@@ -82,16 +108,19 @@ def build_max_heap(arr, n, i):
         arr[i], arr[root] = arr[root], arr[i]
         build_max_heap(arr, n, root)
 
+
 def heap_sort(arr):
     arr_len = len(arr)
-    for i in range(arr_len // 2-1, -1, -1):
+    for i in range(arr_len // 2 - 1, -1, -1):
         build_max_heap(arr, arr_len, i)
 
-    for i in range(arr_len-1, 0, -1):
+    for i in range(arr_len - 1, 0, -1):
         arr[i], arr[0] = arr[0], arr[i]
         build_max_heap(arr, i, 0)
 
     return arr
+
+
 ######################################################
 
 ################### Quick Sort #######################
@@ -106,17 +135,23 @@ def partition(arr, low, high):
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
     return i + 1
 
+
 def run_quick_sort(arr, low, high):
     if low < high:
         pi = partition(arr, low, high)
-        run_quick_sort(arr, low, pi - 1)  # sorting everything to the left of the
+        run_quick_sort(arr, low,
+                       pi - 1)  # sorting everything to the left of the
         # pivot
-        run_quick_sort(arr, pi + 1, high)  # sorting everything to the right of the
+        run_quick_sort(arr, pi + 1,
+                       high)  # sorting everything to the right of the
         # pivot
+
 
 def quick_sort(arr):
     run_quick_sort(arr, 0, len(arr) - 1)
     return arr
+
+
 ######################################################
 
 ################### Counting Sort ####################   
@@ -152,27 +187,28 @@ def counting_sort(arr):
         arr[i] = sorted_arr[i]
 
     return arr
+
+
 ######################################################
 
 ################### Radix Sort #######################
 def counting_sort_helps_radix(arr, exp):
- 
     arr_len = len(arr)
     # declare the output array
     output = [0] * (arr_len)
     # initialize array having 0
     count = [0] * (10)
- 
+
     # Store count of occurrences in count[]
     for i in range(0, arr_len):
         index = arr[i] // exp
         modulo = index % 10
         count[modulo] += 1
- 
+
     # Get actual position of current digit
     for i in range(1, 10):
         count[i] += count[i - 1]
- 
+
     # Build the output array
     i = arr_len - 1
     while i >= 0:
@@ -180,12 +216,13 @@ def counting_sort_helps_radix(arr, exp):
         output[count[index % 10] - 1] = arr[i]
         count[index % 10] -= 1
         i -= 1
- 
+
     # Get the sorted array
     i = 0
     for i in range(0, len(arr)):
         arr[i] = output[i]
- 
+
+
 def radix_sort(arr):
     # Find the maximum number
     max_num = max(arr)
@@ -194,6 +231,8 @@ def radix_sort(arr):
         counting_sort_helps_radix(arr, exp)
         exp *= 10
     return arr
+
+
 ######################################################
 
 ################### Insertion Sort ######################
@@ -206,6 +245,8 @@ def insertion_sort(arr):
             j -= 1
         arr[j + 1] = key
     return arr
+
+
 ######################################################
 
 ################### Bucket Sort ######################
@@ -231,7 +272,6 @@ def bucket_sort(arr):
         else:
             temp_arr[len(arr) - 1].append(arr[i])
 
-
     # Sort buckets with insertion sort
     for i in range(len(arr)):
         temp_arr[i] = insertion_sort(temp_arr[i])
@@ -245,6 +285,17 @@ def bucket_sort(arr):
             idx += 1
 
     return sorted_arr
+
+
+######################################################
+
+################### QuickSelect Method Algorithm ########################
+# TODO: QuickSelect Method Algorithm
+
+
+
+
+
 ######################################################
 
 def get_time(algo, arr):
@@ -252,6 +303,7 @@ def get_time(algo, arr):
     algo(arr)
     end_time = time.time()
     return end_time - start_time
+
 
 def run_algorithm(algoes, arr):
     pool = multiprocessing.Pool(processes=len(algoes))
@@ -264,6 +316,7 @@ def run_algorithm(algoes, arr):
     times = [float(result.get()) for result in time_results]
     return times
 
+
 def main():
     try:
         # arr = list(map(int, input("Enter numbers separated by
@@ -275,13 +328,14 @@ def main():
         # print("Sorted Array using Heap Sort: ", heap_sort(arr))
         # print("Sorted Array using Radix Sort: ", radix_sort(arr))
         # print("Sorted Array using Merge Sort: ", merge_sort(arr))
+        print("Sorted Array using Bubble Sort: ", bubble_sort(arr))
 
 
         np.random.seed(55)
         arr = list(np.random.randint(0, 1000, size=100000))
 
         arr_algorithms = [bucket_sort, heap_sort, radix_sort, counting_sort,
-                          quick_sort, merge_sort]
+                          quick_sort, merge_sort, bubble_sort]
         exe_times = run_algorithm(arr_algorithms, arr)
 
         for algorithm, time_consume in zip(arr_algorithms, exe_times):
@@ -290,9 +344,12 @@ def main():
         # Plot the results with colors
         colors = ['blue', 'green', 'red', 'yellow', 'orange']
 
-        for i, (algorithm, time_consume) in enumerate(zip(arr_algorithms, exe_times)):
-            plt.bar(algorithm.__name__, time_consume, color=colors[i], edgecolor='black', label=algorithm.__name__, hatch='/', alpha=0.7)
-        
+        for i, (algorithm, time_consume) in enumerate(
+                zip(arr_algorithms, exe_times)):
+            plt.bar(algorithm.__name__, time_consume, color=colors[i],
+                    edgecolor='black', label=algorithm.__name__, hatch='/',
+                    alpha=0.7)
+
         plt.ylabel('Time (seconds)')
         plt.title('Efficiency of Sorting Algorithms')
         plt.legend()
@@ -301,7 +358,7 @@ def main():
 
     except ValueError:
         print("Please enter only integers separated by spaces.")
-        
+
 
 if __name__ == '__main__':
     main()
