@@ -135,7 +135,6 @@ def partition(arr, low, high):
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
     return i + 1
 
-
 def run_quick_sort(arr, low, high):
     if low < high:
         pi = partition(arr, low, high)
@@ -179,7 +178,7 @@ def counting_sort(arr):
     sorted_arr = []
 
     # iterate over count array
-    for i in range(min_val, max_val+1):
+    for i in range(min_val, max_val + 1):
         # check if value is in array
         if count_arr[i - min_val] > 0:
             # continue appending if element appears more than once
@@ -189,15 +188,20 @@ def counting_sort(arr):
 
     return sorted_arr
 
+
 ######################################################
 
 ################### Radix Sort #######################
+
 def counting_sort_helps_radix(arr, exp):
     arr_len = len(arr)
     # declare the output array
     output = [0] * (arr_len)
     # initialize array having 0
     count = [0] * (10)
+
+    # find min_val
+    min_val = min(arr)
 
     # Store count of occurrences in count[]
     for i in range(0, arr_len):
@@ -222,15 +226,69 @@ def counting_sort_helps_radix(arr, exp):
     for i in range(0, len(arr)):
         arr[i] = output[i]
 
+    return arr
+
 
 def radix_sort(arr):
     # Find the maximum number
     max_num = max(arr)
+    # determine if there are negative numbers in unsorted array
+    min_num = min(arr)
+
     exp = 1
-    while max_num // exp >= 1:
-        counting_sort_helps_radix(arr, exp)
-        exp *= 10
-    return arr
+
+    # create sorted arr array
+    sorted_arr = []
+
+    # if there are negative values, split the array into positive and negative
+    if min_num < 0:
+        pos_unsorted_arr = []
+        neg_unsorted_arr = []
+        sorted_pos_arr = []
+        sorted_neg_arr = []
+
+        for i in arr:
+            if i < 0:
+                neg_unsorted_arr.append(i)
+            else:
+                pos_unsorted_arr.append(i)
+
+        # convert negative elements to positive
+        for i in range(len(neg_unsorted_arr)):
+            neg_unsorted_arr[i] = neg_unsorted_arr[i] * (-1)
+
+        # Find max value of the negative unsorted array
+        max_num_negative = max(neg_unsorted_arr)
+
+        # sort negative elements
+        while max_num_negative // exp >= 1:
+            sorted_neg_arr = counting_sort_helps_radix(neg_unsorted_arr, exp)
+            exp *= 10
+
+        # Reverse the array and convert it back to negative
+        sorted_neg_arr.reverse()
+
+        for i in range(len(sorted_neg_arr)):
+            sorted_neg_arr[i] = sorted_neg_arr[i] * (-1)
+
+        # Reset the max number and exp for the unsorted positive array
+        max_num = max(arr)
+        exp = 1
+
+        # sort positive array
+        while max_num // exp >= 1:
+            sorted_pos_arr = counting_sort_helps_radix(pos_unsorted_arr, exp)
+            exp *= 10
+
+        # concatenate the negative and positive sorted arrays
+        sorted_arr = sorted_neg_arr + sorted_pos_arr
+
+    else:
+        while max_num // exp >= 1:
+            sorted_arr = counting_sort_helps_radix(arr, exp)
+            exp *= 10
+
+    return sorted_arr
 
 
 ######################################################
@@ -303,17 +361,19 @@ def quick_select(arr, low, high, k):
         print("Error: Index out of bound. Please try again.")
 
     else:
-        # select pivot point
-        pivot = partition(arr, low, high - 1)
+        if low <= high:
+            # select pivot point
+            pivot = partition(arr, low, high)
 
-        # return if pivot is equal to k, return pivot element
-        if pivot == k:
-            return arr[pivot]
+            # return if pivot is equal to k, return pivot element
+            if pivot == k:
+                return arr[pivot]
 
-        if k < pivot:
-            return quick_select(arr, low, pivot - 1, k)
-        else:
-            return quick_select(arr, pivot + 1, high, k)
+            elif k < pivot:
+                return quick_select(arr, low, pivot - 1, k)
+            else:
+                return quick_select(arr, pivot + 1, high, k)
+
 ######################################################
 
 def get_time(algo, arr):
@@ -339,26 +399,23 @@ def main():
     try:
         # arr = list(map(int, input("Enter numbers separated by
         # spaces:").split()))
-        arr = [-4, 19, 35, 64, -22, 0, 57, 82, 12, 55, 89, -34, 567, 78, 123, 456, -4, -22, 0, 89, 64]
+        arr = [-4, 19, 35, 64, -22, 0, 57, 82, 12, 55, 89, -34, 567, 78, 123,
+               456, -4, -22, 0, 89, 64]
 
-        #arr = [4, 19, 35, 64, 22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123,
-               #456, 4, 22, 0, 89, 64]
-        print("Sorted Array [EXPECTED OUTPUT]", quick_sort(arr))
-        #print("Sorted Array using Counting Sort: ", counting_sort(arr))
-        #print("Sorted Array using Quick Sort: ", quick_sort(arr))
-        #print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
-        #print("Sorted Array using Heap Sort: ", heap_sort(arr))
-        print("Sorted Array using Radix Sort: ", radix_sort(arr)) # check
-        # negative numbers
-        #print("Sorted Array using Merge Sort: ", merge_sort(arr))
-        #print("Sorted Array using Bubble Sort: ", bubble_sort(arr))
+        # print("Sorted Array using Counting Sort: ", counting_sort(arr))
+        # print("Sorted Array using Quick Sort: ", quick_sort(arr))
+        # print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
+        # print("Sorted Array using Heap Sort: ", heap_sort(arr))
+        # print("Sorted Array using Radix Sort: ", radix_sort(arr))
+        # print("Sorted Array using Merge Sort: ", merge_sort(arr))
+        # print("Sorted Array using Bubble Sort: ", bubble_sort(arr))
 
+        """
         # Running QuickSelect Algorithm
-        k = 8
-
-        #print("The kth smallest element in the array is: ", quick_select(
-        # arr,0,len(arr),k))
-
+        for k in range(1, len(arr) + 1):
+            kth_smallest = quick_select(arr, 0, len(arr) - 1, k - 1)
+            print(f"The {k}th smallest element is: {kth_smallest}")
+        """
 
         np.random.seed(55)
         arr = list(np.random.randint(0, 1000, size=100000))
