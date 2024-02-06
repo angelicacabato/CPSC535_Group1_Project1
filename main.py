@@ -266,11 +266,15 @@ def bucket_sort(arr):
 
     # insert elements into buckets
     for i in range(len(arr)):
-        idx = int(arr[i] / size)
-        if idx != len(arr):
+        if arr[i] == min(arr):
+            idx = 0
             temp_arr[idx].append(arr[i])
         else:
-            temp_arr[len(arr) - 1].append(arr[i])
+            idx = int(arr[i] / size)
+            if idx != len(arr):
+                temp_arr[idx].append(arr[i])
+            else:
+                temp_arr[len(arr) - 1].append(arr[i])
 
     # Sort buckets with insertion sort
     for i in range(len(arr)):
@@ -335,14 +339,14 @@ def main():
     try:
         # arr = list(map(int, input("Enter numbers separated by
         # spaces:").split()))
-        arr = [-4, 19, 35, 64, -22, 0, 57, 82, 12, 55, 89, -34, 567,
-               78, 123, 456, -4, -22, 0, 89, 64]
+        arr = [-4, 19, 35, 64, -22, 0, 57, 82, 12, 55, 89, -34, 567, 78, 123, 456, -4, -22, 0, 89, 64]
 
+        #arr = [4, 19, 35, 64, 22, 0, 57, 82, 12, 55, 89, 34, 567, 78, 123,
+               #456, 4, 22, 0, 89, 64]
         print("Sorted Array [EXPECTED OUTPUT]", quick_sort(arr))
         #print("Sorted Array using Counting Sort: ", counting_sort(arr))
         #print("Sorted Array using Quick Sort: ", quick_sort(arr))
-        print("Sorted Array using Bucket Sort: ", bucket_sort(arr)) # check
-        # lower range
+        #print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
         #print("Sorted Array using Heap Sort: ", heap_sort(arr))
         print("Sorted Array using Radix Sort: ", radix_sort(arr)) # check
         # negative numbers
