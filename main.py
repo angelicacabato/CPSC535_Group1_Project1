@@ -409,13 +409,13 @@ def main():
         # print("Sorted Array using Radix Sort: ", radix_sort(arr))
         # print("Sorted Array using Merge Sort: ", merge_sort(arr))
         # print("Sorted Array using Bubble Sort: ", bubble_sort(arr))
+        print("Sorted Array using Insertion Sort: ", insertion_sort(arr))
 
-        """
-        # Running QuickSelect Algorithm
+
+        # Running QuickSelect Method Algorithm
         for k in range(1, len(arr) + 1):
             kth_smallest = quick_select(arr, 0, len(arr) - 1, k - 1)
             print(f"The {k}th smallest element is: {kth_smallest}")
-        """
 
         np.random.seed(55)
         arr = list(np.random.randint(0, 1000, size=100000))
@@ -441,6 +441,7 @@ def main():
         plt.title('Efficiency of Sorting Algorithms')
         plt.legend()
         plt.show()
+
 
     except ValueError:
         print("Please enter only integers separated by spaces.")
