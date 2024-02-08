@@ -17,9 +17,6 @@ Order Statistics (QuickSelect Method Algorithm)
 """
 import multiprocessing
 import time
-import numpy as np
-import matplotlib.pyplot as plt
-
 
 ################### Bubble Sort ########################
 
@@ -91,7 +88,7 @@ def merge_sort(arr):
 
 
 ######################################################
-
+    
 ################### Heap Sort ########################
 def build_max_heap(arr, n, i):
     root = i
@@ -375,7 +372,7 @@ def quick_select(arr, low, high, k):
                 return quick_select(arr, pivot + 1, high, k)
 
 ######################################################
-
+        
 def get_time(algo, arr):
     start_time = time.time()
     algo(arr)
@@ -394,58 +391,48 @@ def run_algorithm(algoes, arr):
     times = [float(result.get()) for result in time_results]
     return times
 
+# Define all algorithms list
+all_algorithms = [
+    {'name': 'Bubble Sort', 'function': bubble_sort},
+    {'name': 'Quick Sort', 'function': quick_sort},
+    {'name': 'Heap Sort', 'function': heap_sort},
+    {'name': 'Counting Sort', 'function': counting_sort},
+    {'name': 'Radix Sort', 'function': radix_sort},
+    {'name': 'Insertion Sort', 'function': insertion_sort},
+    {'name': 'Bucket Sort', 'function': bucket_sort},
+    {'name': 'Quick Select Sort', 'function': quick_select},
+]
 
-def main():
+def main(arr, k=None):
     try:
-        # arr = list(map(int, input("Enter numbers separated by
-        # spaces:").split()))
-        arr = [-4, 19, 35, 64, -22, 0, 57, 82, 12, 55, 89, -34, 567, 78, 123,
-               456, -4, -22, 0, 89, 64]
+        # Ensure arr is a list of integers
+        #arr = [int(item) for item in arr.split()]  
 
-        # print("Sorted Array using Counting Sort: ", counting_sort(arr))
-        # print("Sorted Array using Quick Sort: ", quick_sort(arr))
-        # print("Sorted Array using Bucket Sort: ", bucket_sort(arr))
-        # print("Sorted Array using Heap Sort: ", heap_sort(arr))
-        # print("Sorted Array using Radix Sort: ", radix_sort(arr))
-        # print("Sorted Array using Merge Sort: ", merge_sort(arr))
-        # print("Sorted Array using Bubble Sort: ", bubble_sort(arr))
-        print("Sorted Array using Insertion Sort: ", insertion_sort(arr))
+        print("Sorted Array [EXPECTED OUTPUT]", quick_sort(arr.copy()))
+        print("Sorted Array using Counting Sort: ", counting_sort(arr.copy()))
+        print("Sorted Array using Quick Sort: ", quick_sort(arr.copy()))
+        print("Sorted Array using Bucket Sort: ", bucket_sort(arr.copy()))  # check lower range
+        print("Sorted Array using Heap Sort: ", heap_sort(arr.copy()))
+        print("Sorted Array using Radix Sort: ", radix_sort(arr.copy())) 
+        # check negative numbers
+        #print("Sorted Array using Merge Sort: ", merge_sort(arr.copy()))
+        print("Sorted Array using Bubble Sort: ", bubble_sort(arr.copy()))
 
+        # Running QuickSelect Algorithm 
+        if k is not None:
+            kth_element = quick_select(arr.copy(), 0, len(arr) - 1, k - 1)  # Adjust k to zero-based index
+            print(f"{k}-th smallest element: {kth_element}")
 
-        # Running QuickSelect Method Algorithm
-        for k in range(1, len(arr) + 1):
-            kth_smallest = quick_select(arr, 0, len(arr) - 1, k - 1)
-            print(f"The {k}th smallest element is: {kth_smallest}")
-
-        np.random.seed(55)
-        arr = list(np.random.randint(0, 1000, size=100000))
-
-        arr_algorithms = [bucket_sort, heap_sort, radix_sort, counting_sort,
-                          quick_sort, merge_sort, bubble_sort, quick_select]
-        exe_times = run_algorithm(arr_algorithms, arr)
+        # List of algorithms to run for timing comparison
+        arr_algorithms = [bubble_sort, quick_sort, heap_sort, counting_sort, radix_sort, insertion_sort, bucket_sort]
+        exe_times = run_algorithm(arr_algorithms, arr.copy())
 
         for algorithm, time_consume in zip(arr_algorithms, exe_times):
             print(f"{algorithm.__name__} Time: {time_consume:.6f} seconds")
-
-        # Plot the results with colors
-        colors = ['blue', 'green', 'red', 'yellow', 'orange', 'purple',
-                  'pink', 'brown']
-
-        for i, (algorithm, time_consume) in enumerate(
-                zip(arr_algorithms, exe_times)):
-            plt.bar(algorithm.__name__, time_consume, color=colors[i],
-                    edgecolor='black', label=algorithm.__name__, hatch='/',
-                    alpha=0.7)
-
-        plt.ylabel('Time (seconds)')
-        plt.title('Efficiency of Sorting Algorithms')
-        plt.legend()
-        plt.show()
-
-
+            
     except ValueError:
         print("Please enter only integers separated by spaces.")
 
-
-if __name__ == '__main__':
+# Main check to run the GUI app
+if __name__ == "__main__":
     main()
