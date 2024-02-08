@@ -354,6 +354,8 @@ def quick_select(arr, low, high, k):
     if len(arr) == 1:
         return arr[0]
 
+    kth_smallest = 0
+
     if high - low <= k < 0:
         print("Error: Index out of bound. Please try again.")
 
@@ -365,11 +367,21 @@ def quick_select(arr, low, high, k):
             # return if pivot is equal to k, return pivot element
             if pivot == k:
                 return arr[pivot]
-
             elif k < pivot:
-                return quick_select(arr, low, pivot - 1, k)
+                kth_smallest = quick_select(arr, low, pivot - 1, k)
             else:
-                return quick_select(arr, pivot + 1, high, k)
+                kth_smallest = quick_select(arr, pivot + 1, high, k)
+
+    # finding the median
+    median_formula = len(arr) // 2
+    median = 0
+
+    if len(arr) % 2 == 0:
+        median = (arr[median_formula] + arr[median_formula - 1]) // 2
+    else:
+        median = arr[median_formula]
+
+    return kth_smallest, median
 
 ######################################################
         
@@ -411,10 +423,9 @@ def main(arr, k=None):
         print("Sorted Array [EXPECTED OUTPUT]", quick_sort(arr.copy()))
         print("Sorted Array using Counting Sort: ", counting_sort(arr.copy()))
         print("Sorted Array using Quick Sort: ", quick_sort(arr.copy()))
-        print("Sorted Array using Bucket Sort: ", bucket_sort(arr.copy()))  # check lower range
+        print("Sorted Array using Bucket Sort: ", bucket_sort(arr.copy()))
         print("Sorted Array using Heap Sort: ", heap_sort(arr.copy()))
-        print("Sorted Array using Radix Sort: ", radix_sort(arr.copy())) 
-        # check negative numbers
+        print("Sorted Array using Radix Sort: ", radix_sort(arr.copy()))
         #print("Sorted Array using Merge Sort: ", merge_sort(arr.copy()))
         print("Sorted Array using Bubble Sort: ", bubble_sort(arr.copy()))
 

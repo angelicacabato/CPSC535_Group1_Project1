@@ -1,6 +1,7 @@
 import sys
 import random
 import time
+import PyQt5
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.animation import FuncAnimation
@@ -86,6 +87,7 @@ class SortingApp(QMainWindow):
     # Modify the runSelectedAlgorithms method within the SortingApp class
     def runSelectedAlgorithms(self):
         self.logBox.clear()  # Clear the log box for new logs
+        quick_select_result = None # clear variable for quick select
         numbers_str = self.textBox.toPlainText().strip()
         if not numbers_str:
             self.logBox.append("No numbers entered. Please enter a list of numbers separated by spaces or commas.")
@@ -100,6 +102,9 @@ class SortingApp(QMainWindow):
         algorithms = []
         times = []
 
+        quick_select_kth_smallest = None
+        quick_select_median = None
+
         for algo in self.selected_algorithms:
             if algo['name'] == 'Quick Select Sort':
                 k, ok = QInputDialog.getInt(self, "Enter k value", "Please enter the value of k:", min=1, max=len(numbers_list), step=1)
@@ -112,8 +117,17 @@ class SortingApp(QMainWindow):
                 sorted_array = algo['function'](numbers_list.copy())
                 self.logBox.append(f"{algo['name']} result: {sorted_array}\n")
             else:
-                quick_select_result = algo['function'](numbers_list.copy(), 0, len(numbers_list) - 1, k-1)  # Adjust k to zero-based index
-                self.logBox.append(f"{algo['name']} k-th smallest element (k={k}): {quick_select_result}\n")
+                quick_select_kth_smallest, quick_select_median = algo[
+                    'function'](numbers_list.copy(),
+                                                       0, len(numbers_list) - 1, k-1)  # Adjust k to zero-based index
+                self.logBox.append(f"{algo['name']} results:")
+                self.logBox.append(f"While k={k}, the k-th smallest element is: {quick_select_kth_smallest[0]}")
+                self.logBox.append(f"The median of the sorted list is "
+                                   f"{quick_select_median}")
+                quick_select_kth_smallest = None
+                quick_select_median = None
+
+
             end_time = time.time()
             algorithms.append(algo['name'])
             times.append(end_time - start_time)
