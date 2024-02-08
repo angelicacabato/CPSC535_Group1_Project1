@@ -348,6 +348,23 @@ def bucket_sort(arr):
 
 ######################################################
 
+################### Get Median Algorithm ########################
+def get_median(arr):
+    # formula for finding the median
+    median_formula = len(arr) // 2
+    median = 0 # clear median value
+    # back up to ensure list is sorted
+    sorted_arr = quick_sort(arr)
+
+    if len(arr) % 2 == 0:
+        median = (sorted_arr[median_formula] + sorted_arr[median_formula - 1]) // 2
+    else:
+        median = sorted_arr[median_formula]
+
+    return median
+
+######################################################
+
 ################### QuickSelect Method Algorithm ########################
 def quick_select(arr, low, high, k):
     # base case for recursion
@@ -355,6 +372,10 @@ def quick_select(arr, low, high, k):
         return arr[0]
 
     kth_smallest = 0
+    # finding the median
+    median_formula = len(arr) // 2
+    median = 0
+    side = None
 
     if high - low <= k < 0:
         print("Error: Index out of bound. Please try again.")
@@ -372,14 +393,13 @@ def quick_select(arr, low, high, k):
             else:
                 kth_smallest = quick_select(arr, pivot + 1, high, k)
 
-    # finding the median
-    median_formula = len(arr) // 2
-    median = 0
+    # extracting only the kth-smallest element
+    if isinstance(kth_smallest, tuple):
+        if len(kth_smallest) > 1:
+            kth_smallest = kth_smallest[0]
 
-    if len(arr) % 2 == 0:
-        median = (arr[median_formula] + arr[median_formula - 1]) // 2
-    else:
-        median = arr[median_formula]
+    # get median
+    median = get_median(arr)
 
     return kth_smallest, median
 
