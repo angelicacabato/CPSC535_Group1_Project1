@@ -372,10 +372,6 @@ def quick_select(arr, low, high, k):
         return arr[0]
 
     kth_smallest = 0
-    # finding the median
-    median_formula = len(arr) // 2
-    median = 0
-    side = None
 
     if high - low <= k < 0:
         print("Error: Index out of bound. Please try again.")
