@@ -1,11 +1,12 @@
 import sys
 import random
 import time
+import PyQt5
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.animation import FuncAnimation
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QCheckBox, QTextEdit, QLabel, QFrame, QInputDialog, QMessageBox
-from PyQt5.QtGui import QIcon, QPalette, QColor
+from PyQt5.QtGui import QPalette, QColor
 from main import all_algorithms 
 
 class SortingApp(QMainWindow):
@@ -30,11 +31,7 @@ class SortingApp(QMainWindow):
         palette.setColor(QPalette.WindowText, QColor(255, 255, 255))  # White for the text
         palette.setColor(QPalette.Base, QColor(169, 169, 169))  # Grey for the text boxes
         self.setPalette(palette)
-
-        # Set the window icon to the provided logo
-        # Assuming the path to the logo is correct and accessible
-        self.setWindowIcon(QIcon('/Users/csuftitan/Documents/CollegeProject/Final/img.png'))
-
+        
         self.textBox = QTextEdit()
         self.mainLayout.addWidget(QLabel("Enter list of numbers:"))
         self.mainLayout.addWidget(self.textBox)
@@ -83,7 +80,6 @@ class SortingApp(QMainWindow):
         numbers = [str(random.randint(1, 100)) for _ in range(15000)]
         self.textBox.setText(", ".join(numbers))
 
-    # Modify the runSelectedAlgorithms method within the SortingApp class
     def runSelectedAlgorithms(self):
         self.logBox.clear()  # Clear the log box for new logs
         numbers_str = self.textBox.toPlainText().strip()
@@ -112,8 +108,19 @@ class SortingApp(QMainWindow):
                 sorted_array = algo['function'](numbers_list.copy())
                 self.logBox.append(f"{algo['name']} result: {sorted_array}\n")
             else:
-                quick_select_result = algo['function'](numbers_list.copy(), 0, len(numbers_list) - 1, k-1)  # Adjust k to zero-based index
-                self.logBox.append(f"{algo['name']} k-th smallest element (k={k}): {quick_select_result}\n")
+                quick_select_result = algo['function'](numbers_list.copy(), 0, len(numbers_list) - 1, k-1)  # Adjust k to zero-based
+                # index
+                quick_select_kth_element = quick_select_result[0]
+                quick_select_median = quick_select_result[1]
+                self.logBox.append(f"{algo['name']} results:")
+                self.logBox.append(f"While k={k},  the k-th smallest element "
+                                   f"is: {quick_select_kth_element}")
+                self.logBox.append(f"The median of the sorted list is "
+                                   f"{quick_select_median} ")
+
+            quick_select_kth_element = None
+            quick_select_median = None
+
             end_time = time.time()
             algorithms.append(algo['name'])
             times.append(end_time - start_time)
@@ -128,7 +135,6 @@ class SortingApp(QMainWindow):
         # Set the color palette
         palette = list(reversed(sns.color_palette("seismic", len(algorithms) + 1).as_hex()))[1:]
 
-        # No animation for line chart, so plot it directly
         ax2.set_facecolor("#ADD8E6")
         ax2.plot(algorithms, times, marker='o', color='orange', label='Line Chart')
         ax2.set_ylim(0, max(times) * 1.1)  # Match y limit with bar chart
@@ -157,7 +163,6 @@ class SortingApp(QMainWindow):
 
         ani = FuncAnimation(fig, animate, fargs=(times, palette, ax1, algorithms), interval=50, frames=50, repeat=False)
 
-        # Keep the animation object in memory to avoid it being garbage collected
         self._ani = ani
 
         plt.show()
