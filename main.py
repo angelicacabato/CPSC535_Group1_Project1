@@ -121,6 +121,28 @@ def heap_sort(arr):
 ######################################################
 
 ################### Quick Sort #######################
+def new_partition(arr, low, high):
+    pi = low
+    while low <= high:
+        if arr[low] <= arr[pi]:
+            low += 1
+        else:
+            arr[low], arr[high] = arr[high], arr[low]
+            high -= 1
+    arr[pi], arr[low-1] = arr[low-1], arr[pi]
+    return low-1
+
+
+def run_quick_sort(arr, low, high):
+    if low < high:
+        pi = new_partition(arr, low, high)
+        run_quick_sort(arr, low,
+                       pi - 1)  # sorting everything to the left of the
+        # pivot
+        run_quick_sort(arr, pi + 1,
+                       high)  # sorting everything to the right of the
+        # pivot
+
 def partition(arr, low, high):
     i = low - 1
     pivot = arr[high]
@@ -132,7 +154,7 @@ def partition(arr, low, high):
     arr[i + 1], arr[high] = arr[high], arr[i + 1]
     return i + 1
 
-def run_quick_sort(arr, low, high):
+def run_quick_sort1(arr, low, high):
     if low < high:
         pi = partition(arr, low, high)
         run_quick_sort(arr, low,
@@ -142,11 +164,9 @@ def run_quick_sort(arr, low, high):
                        high)  # sorting everything to the right of the
         # pivot
 
-
 def quick_sort(arr):
     run_quick_sort(arr, 0, len(arr) - 1)
     return arr
-
 
 ######################################################
 
