@@ -80,7 +80,7 @@ class SortingApp(QMainWindow):
         self.selectAllButton.setText("Deselect All" if not self.selectAllState else "Select All")
 
     def generateRandomNumbers(self):
-        numbers = [str(random.randint(1, 100)) for _ in range(10)]
+        numbers = [str(random.randint(1, 100)) for _ in range(15000)]
         self.textBox.setText(", ".join(numbers))
 
     # Modify the runSelectedAlgorithms method within the SortingApp class
@@ -142,7 +142,7 @@ class SortingApp(QMainWindow):
             ax1.clear()
             
             # Scale the current values based on the frame
-            scaled_times = [t * i / 100 for t in times]
+            scaled_times = [t * i / 50 for t in times]
             
             # Bar chart
             ax1.set_facecolor("#ADD8E6")
